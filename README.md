@@ -154,7 +154,7 @@ python main.py
 
 Aplikacja teraz korzysta z plików JSON do przechowywania stanu użytkownika.
 
-(ab)text
+```text
 📦 youtube-downloader-pro
 ┣ 📂 assets/
 ┃ ┗ 📂 images/
@@ -165,7 +165,7 @@ Aplikacja teraz korzysta z plików JSON do przechowywania stanu użytkownika.
 ┣ 📜 requirements.txt      # Lista zależności
 ┣ 📜 LICENSE               # Licencja MIT
 ┗ 📜 README.md
-(ab)
+```
 
 ### Opis głównych modułów:
 
