@@ -1,19 +1,19 @@
 <div align="center">
 
-  <img src="assets/images/logo.png" alt="YouTube Downloader Pro Logo" width="200" height="auto" />
+  <img src="assets/images/logo.ico" alt="YouTube Downloader Pro Logo" width="200" height="auto" />
 
   # YouTube Downloader Pro
 
-  **Profesjonalna aplikacja desktop do pobierania filmów i audio z YouTube**
+  **Profesjonalna aplikacja desktop do pobierania filmów, playlist i audio z YouTube**
   <br>
   *Prosta, szybka i intuicyjna - pobieraj bez ograniczeń*
 
   <p>
-    <a href="https://github.com/MaxPowerPL/youtube-downloader-pro/releases/tag/v1.0.0">
+    <a href="https://github.com/MaxPowerPL/youtube-downloader-pro/releases/tag/v1.4.0">
       <img src="https://img.shields.io/github/v/tag/MaxPowerPL/youtube-downloader-pro?label=VERSION&style=for-the-badge&color=238636" alt="Wersja" />
     </a>
     <a href="#">
-      <img src="https://img.shields.io/badge/Status-Stable-important?style=for-the-badge" alt="Status" />
+      <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge" alt="Status" />
     </a>
     <a href="https://www.python.org/">
       <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
@@ -49,32 +49,34 @@
 
 Projekt powstał z potrzeby stworzenia prostego, ale funkcjonalnego narzędzia dla użytkowników, którzy chcą mieć pełną kontrolę nad pobieranymi materiałami - od wyboru jakości wideo (nawet 1080p+), przez samodzielne pobieranie strumieni video bez dźwięku, aż po konwersję audio do MP3. Wszystko w przejrzystym, nowoczesnym interfejsie.
 
-Aplikacja opiera się na potężnym silniku **yt-dlp** oraz **FFmpeg** do przetwarzania multimediów, zapewniając stabilność i kompatybilność z setkami serwisów streamingowych. Dzięki użyciu biblioteki `imageio-ffmpeg`, FFmpeg jest automatycznie dostępny - nie wymaga osobnej instalacji.
+Projekt umożliwia nie tylko pobieranie pojedynczych filmów w jakości 4K/1080p, ale teraz obsługuje również **całe playlisty**, posiada **historię pobrań**, **tryb ciemny** oraz system powiadomień. Aplikacja dba o automatyczne łączenie obrazu z dźwiękiem oraz konwersję formatów przy użyciu silników **yt-dlp** oraz **FFmpeg**.
 
-### 🎯 Aktualna Wersja: `v1.0.0 (Stable)`
-Pierwsza stabilna wersja zawiera kompletny zestaw funkcji pobierania wideo i audio, czysty interfejs użytkownika z Treeview do wyboru jakości, oraz zaawansowany system logów i monitorowania postępu z obsługą ANSI escape codes.
+### 🎯 Aktualna Wersja: `v1.4.0 (Latest)`
+Najnowsza wersja wprowadza pełną obsługę playlist z automatycznym tworzeniem folderów, menedżer historii z weryfikacją plików na dysku, personalizację wyglądu (Dark Mode) oraz poprawki stabilności UI (centrowanie okien, poprawne ikony).
 
 ---
 
 ## ✨ Funkcjonalności
 
-Co już działa w tej wersji?
+Co oferuje aplikacja?
 
-- [x] **Pobieranie wideo i audio**:
-  - **Wideo + Dźwięk**: Automatyczne łączenie najlepszego strumienia wideo z audio, merge do MP4 z AAC.
-  - **Tylko Wideo**: Pobieranie czystego strumienia wideo bez dźwięku (dla edytorów/montażystów).
-  - **Tylko Audio**: Ekstrakcja audio i konwersja do MP3 (192 kbps).
-- [x] **Inteligentna analiza formatów**:
-  - Automatyczne wykrywanie dostępnych jakości (360p, 720p, 1080p, itp.).
-  - Wyświetlanie kodeków, rozmiaru pliku, FPS w czytelnej tabeli.
-  - Deduplikacja - eliminacja powtarzających się formatów.
-- [x] **Interfejs użytkownika**:
-  - Nowoczesny UI z motywem "clam" i spójnymi stylami.
-  - Pasek postępu z live danymi: procenty, prędkość, ETA (oczyszczony z kodów ANSI).
-  - Dziennik zdarzeń z timestampami.
-- [x] **FFmpeg automatyczny**:
-  - Integracja `imageio-ffmpeg` - brak konieczności ręcznej instalacji.
-  - Obsługa merge, konwersji audio, i przetwarzania wideo.
+### 📥 Pobieranie
+- **Obsługa Playlist**: Wykrywa linki do playlist, wyświetla listę utworów i pobiera całość do dedykowanego podfolderu.
+- **3 Tryby**:
+  - **Wideo + Dźwięk**: Najlepsza jakość (merge do MP4/AAC).
+  - **Tylko Wideo**: Czysty strumień obrazu.
+  - **Tylko Audio**: Konwersja do MP3 (192 kbps).
+- **Inteligentna tabela**: Wyświetla kodeki (AV1/VP9/H264), rozmiar i FPS.
+
+### ⚙️ Zarządzanie i UI
+- **Historia Pobrań**:
+  - Pełna lista pobranych plików z datą i ścieżką.
+  - **Weryfikacja**: Oznacza kolorem pliki, które zostały usunięte z dysku.
+  - **Zarządzanie**: Możliwość usuwania wpisów lub czyszczenia całej historii.
+- **Personalizacja**:
+  - **Tryb Ciemny / Jasny**: Przełącznik motywu aplikacji.
+  - **Domyślna Jakość**: Ustawienie preferowanej rozdzielczości (np. max 1080p) dla playlist.
+- **Powiadomienia**: Systemowe dymki powiadomień (Windows Toast) po zakończeniu pobierania.
 
 ---
 
@@ -130,6 +132,7 @@ pip install -r requirements.txt
 ```
 yt-dlp
 imageio-ffmpeg
+plyer
 ```
 
 ### 5. Uruchomienie
@@ -149,18 +152,20 @@ python main.py
 
 ## 📂 Struktura Projektu
 
-Projekt ma prostą, jednoplikową architekturę - cały kod UI, logika pobierania i integracja yt-dlp/FFmpeg znajdują się w `main.py`. Taka struktura ułatwia deployment i modyfikacje.
+Aplikacja teraz korzysta z plików JSON do przechowywania stanu użytkownika.
 
-```text
+(ab)text
 📦 youtube-downloader-pro
 ┣ 📂 assets/
 ┃ ┗ 📂 images/
-┃   ┗ 📜 logo.png          # Logo projektu
-┣ 📜 main.py               # Główny plik aplikacji (klasa YouTubeDownloaderPro)
-┣ 📜 requirements.txt      # Lista zależności Pythona
+┃   ┗ 📜 logo.ico          # Ikona aplikacji i powiadomień
+┣ 📜 main.py               # Główny kod aplikacji
+┣ 📜 config.json           # [Auto] Zapisuje motyw i domyślną jakość
+┣ 📜 history.json          # [Auto] Baza danych historii pobrań
+┣ 📜 requirements.txt      # Lista zależności
 ┣ 📜 LICENSE               # Licencja MIT
 ┗ 📜 README.md
-```
+(ab)
 
 ### Opis głównych modułów:
 
@@ -203,14 +208,14 @@ Plany rozwoju projektu:
 - [x] Progress bar z live stats
 - [x] Deduplikacja formatów
 
-### Faza 2: Enhancements (Planowane)
-- [ ] Pobieranie playlist / kanałów YouTube
-- [ ] Historia pobranych plików
-- [ ] Ustawienia jakości domyślnej
-- [ ] Ciemny motyw UI
-- [ ] Powiadomienia systemowe po zakończeniu
+### Faza 2: Enhancements (Ukończone ✅)
+- [x] Pobieranie playlist / kanałów YouTube
+- [x] Historia pobranych plików (z zarządzaniem i weryfikacją)
+- [x] Ustawienia jakości domyślnej
+- [x] Ciemny motyw UI
+- [x] Powiadomienia systemowe po zakończeniu
 
-### Faza 3: Pro Features (W przyszłości)
+### Faza 3: Pro Features (Planowane)
 - [ ] Proxy/VPN support
 - [ ] Skróty klawiaturowe
 - [ ] Multi-threading (równoległe pobieranie)
@@ -233,20 +238,28 @@ Plany rozwoju projektu:
 
 ## 📝 Changelog
 
-### v1.0.0 (Initial Release)
-**NEW FEATURES:**
-- Pełna funkcjonalność pobierania wideo i audio z YouTube
-- Trzy tryby: Wideo+Dźwięk, Tylko Wideo, Tylko Audio
-- Treeview z automatycznym wykrywaniem formatów (jakość, kodek, rozmiar, FPS)
-- Progress bar z czasem rzeczywistym (procenty, prędkość, ETA)
-- Dziennik zdarzeń z timestampami
+### 1.4 (Icon & UI Fix)
+- **Fix:** Poprawiono wyświetlanie ikon aplikacji (.ico) na pasku zadań i w oknach.
+- **UI:** Dodano automatyczne centrowanie wszystkich okien na ekranie.
+- **UI:** Poprawiono kolejność okien (Z-order) przy komunikatach potwierdzeń.
 
-**Zmiany techniczne:**
-- Integracja `yt-dlp` jako backend downloadera
-- `imageio-ffmpeg` dla automatycznej dostępności FFmpeg
-- Custom `MyLogger` przekierowujący output yt-dlp do GUI
-- ANSI escape codes cleanup dla czytelności postępu
-- Threading dla non-blocking downloads
+### v1.3 (History Fix)
+- **Feature:** Weryfikacja istnienia plików w Historii (zielony = dostępny, czerwony = usunięty).
+- **Feature:** Możliwość usuwania zaznaczonych wpisów z historii.
+- **Fix:** Poprawiono zapisywanie ścieżek plików w historii.
+
+### v1.2 (Playlist Support)
+- **Feature:** Pełna obsługa playlist YouTube.
+- **Feature:** Automatyczne tworzenie podfolderów dla playlist.
+- **Feature:** Statusy pobierania dla poszczególnych plików w tabeli playlisty.
+
+### v1.1 (Settings & Theme)
+- **Feature:** Dodano Tryb Ciemny.
+- **Feature:** Dodano okno Ustawień (wybór domyślnej jakości).
+- **Feature:** Integracja powiadomień systemowych (plyer).
+
+### v1.0.0 (Initial Release)
+- Podstawowa funkcjonalność pobierania pojedynczych wideo.
 
 ---
 
