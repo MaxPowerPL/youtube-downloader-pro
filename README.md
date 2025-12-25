@@ -9,7 +9,7 @@
   *Prosta, szybka i intuicyjna - pobieraj bez ograniczeń*
 
   <p>
-    <a href="https://github.com/MaxPowerPL/youtube-downloader-pro/releases/tag/v1.4.0">
+    <a href="https://github.com/MaxPowerPL/youtube-downloader-pro/releases/tag/v1.4.1">
       <img src="https://img.shields.io/github/v/tag/MaxPowerPL/youtube-downloader-pro?label=VERSION&style=for-the-badge&color=238636" alt="Wersja" />
     </a>
     <a href="#">
@@ -51,8 +51,8 @@ Projekt powstał z potrzeby stworzenia prostego, ale funkcjonalnego narzędzia d
 
 Projekt umożliwia nie tylko pobieranie pojedynczych filmów w jakości 4K/1080p, ale teraz obsługuje również **całe playlisty**, posiada **historię pobrań**, **tryb ciemny** oraz system powiadomień. Aplikacja dba o automatyczne łączenie obrazu z dźwiękiem oraz konwersję formatów przy użyciu silników **yt-dlp** oraz **FFmpeg**.
 
-### 🎯 Aktualna Wersja: `v1.4.0 (Latest)`
-Najnowsza wersja wprowadza pełną obsługę playlist z automatycznym tworzeniem folderów, menedżer historii z weryfikacją plików na dysku, personalizację wyglądu (Dark Mode) oraz poprawki stabilności UI (centrowanie okien, poprawne ikony).
+### 🎯 Aktualna Wersja: `v1.4.1 (Stable)`
+Najnowsza wersja wprowadza **całkowitą przebudowę kodu (Refactoring)**. Aplikacja została podzielona na logiczne moduły (MVC), co ułatwia jej rozwój, testowanie i czytelność kodu, zachowując jednocześnie wszystkie dotychczasowe funkcjonalności.
 
 ---
 
@@ -129,7 +129,7 @@ pip install -r requirements.txt
 ```
 
 **Zawartość `requirements.txt`:**
-```
+```text
 yt-dlp
 imageio-ffmpeg
 plyer
@@ -152,14 +152,18 @@ python main.py
 
 ## 📂 Struktura Projektu
 
-Aplikacja teraz korzysta z plików JSON do przechowywania stanu użytkownika.
+W wersji v1.4.1 kod został zrefaktoryzowany i podzielony na moduły odpowiedzialne za konkretne zadania.
 
 ```text
 📦 youtube-downloader-pro
 ┣ 📂 assets/
 ┃ ┗ 📂 images/
 ┃   ┗ 📜 logo.ico          # Ikona aplikacji i powiadomień
-┣ 📜 main.py               # Główny kod aplikacji
+┣ 📜 main.py               # [Controller] Główny punkt wejścia i logika biznesowa
+┣ 📜 ui.py                 # [View] Główne okno aplikacji, widgety i style
+┣ 📜 windows.py            # [View] Okna dodatkowe (Ustawienia, Historia)
+┣ 📜 data_manager.py       # [Model] Zarządzanie plikami JSON (config, history)
+┣ 📜 utils.py              # [Utils] Funkcje pomocnicze (centrowanie, ikony)
 ┣ 📜 config.json           # [Auto] Zapisuje motyw i domyślną jakość
 ┣ 📜 history.json          # [Auto] Baza danych historii pobrań
 ┣ 📜 requirements.txt      # Lista zależności
@@ -167,19 +171,15 @@ Aplikacja teraz korzysta z plików JSON do przechowywania stanu użytkownika.
 ┗ 📜 README.md
 ```
 
-### Opis głównych modułów:
+### Opis modułów:
 
-#### `main.py`
-| Komponent | Opis |
-|------|------|
-| `YouTubeDownloaderPro` | Główna klasa aplikacji, inicjalizuje UI i FFmpeg. |
-| `_setup_styles()` | Konfiguruje motywy ttk (clam), kolory, fonty dla spójnego UI. |
-| `_build_ui()` | Tworzy interfejs graficzny (frames, buttons, Treeview, log widget). |
-| `start_analysis()` | Wątek pobierania informacji o filmie z yt-dlp (asynchrouniczne). |
-| `_process_info()` | Parsuje formaty, deduplikuje, wypełnia Treeview odpowiednimi danymi. |
-| `start_download()` | Wątek pobierania pliku z obsługą progress hooks i ANSI cleaning. |
-| `MyLogger` | Custom logger yt-dlp przekierowujący output do UI log widget. |
-| `_clean_ansi()` | Usuwa ANSI escape codes z tekstu (fix dla ETA/prędkości). |
+| Plik | Rola i Odpowiedzialność |
+|------|-------------------------|
+| `main.py` | **Entry Point**. Inicjalizuje aplikację, zarządza wątkami pobierania (`yt-dlp`), logiką `ffmpeg` oraz łączy UI z danymi. |
+| `ui.py` | **Interfejs**. Zawiera klasę `MainUI`, która buduje główne okno, tabelę wyników, paski postępu oraz obsługuje motywy graficzne. |
+| `windows.py` | **Okna Dialogowe**. Zawiera funkcje tworzące okno "Ustawienia" oraz zaawansowane okno "Historia" z tabelą. |
+| `data_manager.py` | **Dane**. Odpowiada za odczyt i zapis plików `config.json` oraz `history.json`. |
+| `utils.py` | **Narzędzia**. Helpery do centrowania okien na ekranie, czyszczenia kodów ANSI z tekstu oraz obsługi AppID w Windows. |
 
 ---
 
@@ -225,10 +225,9 @@ Plany rozwoju projektu:
 
 ## 🐛 Znane Problemy i Rozwiązania
 
-### ✅ Naprawione w v1.0.0:
-- **ANSI escape codes w ETA**: Dodano `_clean_ansi()` do usuwania kolorów z postępu.
-- **Blokowanie UI podczas pobierania**: Użycie `threading.Thread` dla operacji IO.
-- **Brak FFmpeg**: `imageio-ffmpeg` dostarcza binarkę automatycznie.
+### ✅ Naprawione w v1.4.1:
+- **Modularność**: Rozwiązano problem "God Object" w `main.py`, dzieląc kod na mniejsze pliki.
+- **Zależności cykliczne**: Naprawiono błędy importów i rekurencji w logice UI.
 
 ### 🔧 Do poprawy:
 - [ ] Obsługa bardzo długich tytułów filmów (truncate w UI)
@@ -238,7 +237,12 @@ Plany rozwoju projektu:
 
 ## 📝 Changelog
 
-### 1.4 (Icon & UI Fix)
+### v1.4.1 (Modular Refactoring)
+- **Refactor**: Gruntowna przebudowa struktury projektu. Kod podzielono z jednego pliku `main.py` na 5 wyspecjalizowanych modułów (`ui`, `windows`, `data_manager`, `utils`).
+- **Fix**: Naprawiono błędy rekurencji przy odświeżaniu widoku.
+- **Dev**: Zastosowano wzorzec zbliżony do MVC dla łatwiejszego utrzymania kodu.
+
+### v1.4.0 (Icon & UI Fix)
 - **Fix:** Poprawiono wyświetlanie ikon aplikacji (.ico) na pasku zadań i w oknach.
 - **UI:** Dodano automatyczne centrowanie wszystkich okien na ekranie.
 - **UI:** Poprawiono kolejność okien (Z-order) przy komunikatach potwierdzeń.
